@@ -1,0 +1,15 @@
+.mouseOver {
+    color: blue;
+}
+
+.mouseOut {
+    color: red;
+}
+
+.resize {
+    color: blueviolet;
+}
+
+.rightClick {
+    color: chartreuse;
+}
