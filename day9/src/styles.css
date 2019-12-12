@@ -1,0 +1,114 @@
+* {
+  color: white;
+}
+
+body {
+  font-family: sans-serif;
+  background-color: gray;
+}
+
+.outer {
+  display: table;
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+}
+
+.inner {
+  display: table-cell;
+}
+
+.calc {
+  padding: 20px;
+  margin-top: 50px;
+  margin-left: auto;
+  margin-right: auto;
+  width: 727px;
+  border: 1px solid black;
+  background-color: black;
+  border-radius: 30px;
+  /*whatever width you want*/
+}
+
+.display {
+  border: 1px solid black;
+}
+
+.displayMode p {
+  display: inline;
+}
+
+.buttons {
+  margin-top: 10px;
+  float: left;
+}
+
+.btnNum {
+  background-color: grey;
+}
+
+.btnOperator {
+  background-color: orange;
+}
+
+.btnLine button {
+  height: 50px;
+  width: 150px;
+  font-size: 30px;
+  margin: 0 5px 10px 0;
+  border-radius: 10px;
+  border: 1px solid black;
+}
+
+.btnMode {
+  width: 50px;
+  border-radius: 2px;
+  border: 1px solid black;
+  margin: 1px;
+}
+
+.btnBigLine {
+  display: inline-block;
+  margin-top: 10px;
+  margin-left: 10px;
+}
+
+.btnClear {
+  height: 350px;
+  width: 80px;
+  font-size: 50px;
+  border-radius: 10px;
+  border: 1px solid black;
+  background-color: orangered;
+}
+
+.btnActive {
+  background-color: rgb(96, 164, 252);
+  border-color: rgb(53, 100, 255);
+}
+
+button:disabled {
+  border: 1px solid grey;
+  background-color: #000000;
+  color: #666666;
+}
+
+button {
+  outline: none;
+  background-color: grey;
+}
+
+button:active {
+  transform: scale(0.8);
+  transition: all ease 0.3s;
+}
+
+p {
+  text-align: left;
+}
+
+h1 {
+  text-align: right;
+}
