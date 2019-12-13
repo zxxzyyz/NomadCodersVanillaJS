@@ -1,69 +1,119 @@
 // <⚠️ DONT DELETE THIS ⚠️>
-//import "./styles.css";
+import "./styles.css";
 // <⚠️ /DONT DELETE THIS ⚠️>
 
+/* global BigInt */
+let isNewNum = true;
+let display = document.querySelector(".display");
+let displayHex = document.querySelector(".displayHex");
+let displayDec = document.querySelector(".displayDec");
+let displayOct = document.querySelector(".displayOct");
+let displayBin = document.querySelector(".displayBin");
+
+// Operand
+let result = BigInt(0);
+let lastNum = BigInt(0);
+let lastOperator;
+
 // Operator
+const Operators = Object.freeze({
+  Addition: 0,
+  Substraction: 1,
+  Multiplication: 2,
+  Division: 3,
+  Modulus: 4,
+  LeftShift: 5,
+  RightShift: 6,
+  Equal: 7
+});
+let operator = Operators.Addition;
 let btnOperators = document.querySelectorAll(".btnOperator");
 let btnClear = document.querySelector(".btnClear");
-let btnPlus = document.querySelector(".btnPlus");
-let btnMinus = document.querySelector(".btnMinus");
-let btnMultiply = document.querySelector(".btnMultiply");
-let btnDivide = document.querySelector(".btnDivide");
-let btnMod = document.querySelector(".btnMod");
-let btnShiftLeft = document.querySelector(".btnShiftLeft");
-let btnShiftRight = document.querySelector(".btnShiftRight");
-let btnEqual = document.querySelector(".btnEqual");
-
-let display = document.querySelector(".display");
-let firstNumber = 0;
 
 // Mode
 let mode = "HEX";
 let modeNumbers = document.querySelectorAll("p");
-let modeButtons = document.querySelectorAll(".btnMode");
+let btnModes = document.querySelectorAll(".btnMode");
 
 // Number
 let btnNumbers = document.querySelectorAll(".btnNum");
-let num1 = document.querySelector(".btn1");
-let num2 = document.querySelector(".btn2");
-let num3 = document.querySelector(".btn3");
-let num4 = document.querySelector(".btn4");
-let num5 = document.querySelector(".btn5");
-let num6 = document.querySelector(".btn6");
-let num7 = document.querySelector(".btn7");
-let num8 = document.querySelector(".btn8");
-let num9 = document.querySelector(".btn9");
-let numA = document.querySelector(".btnA");
-let numB = document.querySelector(".btnB");
-let numC = document.querySelector(".btnC");
-let numD = document.querySelector(".btnD");
-let numE = document.querySelector(".btnE");
-let numF = document.querySelector(".btnF");
+let btn2 = document.querySelector(".btn2");
+let btn3 = document.querySelector(".btn3");
+let btn4 = document.querySelector(".btn4");
+let btn5 = document.querySelector(".btn5");
+let btn6 = document.querySelector(".btn6");
+let btn7 = document.querySelector(".btn7");
+let btn8 = document.querySelector(".btn8");
+let btn9 = document.querySelector(".btn9");
+let btnA = document.querySelector(".btnA");
+let btnB = document.querySelector(".btnB");
+let btnC = document.querySelector(".btnC");
+let btnD = document.querySelector(".btnD");
+let btnE = document.querySelector(".btnE");
+let btnF = document.querySelector(".btnF");
 
 function handleClear() {
+  isNewNum = true;
+  result = BigInt(0);
   display.innerText = 0;
+  operator = Operators.Addition;
   modeNumbers.forEach(num => (num.innerText = 0));
 }
 
-function handleBtnAvailability(mode) {
+function changeBtnAvailability() {
   btnNumbers.forEach(btn => (btn.disabled = false));
   switch (mode) {
     case "DEC":
-      (numA.disabled = true), (numB.disabled = true), (numC.disabled = true);
-      (numD.disabled = true), (numE.disabled = true), (numF.disabled = true);
+      btnA.disabled = true;
+      btnB.disabled = true;
+      btnC.disabled = true;
+      btnD.disabled = true;
+      btnE.disabled = true;
+      btnF.disabled = true;
       break;
     case "OCT":
-      (num8.disabled = true), (num9.disabled = true), (numA.disabled = true);
-      (numB.disabled = true), (numC.disabled = true), (numD.disabled = true);
-      (numE.disabled = true), (numF.disabled = true);
+      btn8.disabled = true;
+      btn9.disabled = true;
+      btnA.disabled = true;
+      btnB.disabled = true;
+      btnC.disabled = true;
+      btnD.disabled = true;
+      btnE.disabled = true;
+      btnF.disabled = true;
       break;
     case "BIN":
-      (num2.disabled = true), (num3.disabled = true), (num4.disabled = true);
-      (num5.disabled = true), (num6.disabled = true), (num7.disabled = true);
-      (num8.disabled = true), (num9.disabled = true), (numA.disabled = true);
-      (numB.disabled = true), (numC.disabled = true), (numD.disabled = true);
-      (numE.disabled = true), (numF.disabled = true);
+      btn2.disabled = true;
+      btn3.disabled = true;
+      btn4.disabled = true;
+      btn5.disabled = true;
+      btn6.disabled = true;
+      btn7.disabled = true;
+      btn8.disabled = true;
+      btn9.disabled = true;
+      btnA.disabled = true;
+      btnB.disabled = true;
+      btnC.disabled = true;
+      btnD.disabled = true;
+      btnE.disabled = true;
+      btnF.disabled = true;
       break;
+    default:
+      alert("Error");
+  }
+}
+
+function changeDisplayMode() {
+  switch (mode) {
+    case "HEX":
+      return displayHex.innerText;
+    case "DEC":
+      return displayDec.innerText;
+    case "OCT":
+      return displayOct.innerText;
+    case "BIN":
+      return displayBin.innerText;
+    default:
+      alert("Error");
   }
 }
 
@@ -72,45 +122,60 @@ function handleModeChange(e) {
   if (mode === clickedBtn.innerText) return;
   mode = clickedBtn.innerText;
   clickedBtn.classList.add("btnActive");
-  modeButtons.forEach(btn => {
+  btnModes.forEach(btn => {
     if (mode !== btn.innerText) btn.classList.remove("btnActive");
   });
-  handleBtnAvailability(mode);
+  changeBtnAvailability();
+  display.innerText = changeDisplayMode();
+  handleModeNumber();
 }
 
 function handleInput(e) {
   let beforeValue = display.innerText;
-  if (parseInt(display.innerText) !== 0) {
+
+  if (isNewNum) {
+    isNewNum = false;
+    display.innerText = e.target.innerText;
+  } else if (parseInt(display.innerText, 10) !== 0) {
     display.innerText += e.target.innerText;
   } else {
     display.innerText = e.target.innerText;
   }
-  if (
-    getDisplayValue() > BigInt("0xFFFFFFFFFFFFFFFF") ||
-    display.innerText.length >= 39
-  ) {
+
+  if (isLimit()) {
     display.innerText = beforeValue;
     return;
   }
+
   handleModeNumber();
 }
 
 function getDisplayValue() {
+  let isNegative = display.innerText.includes("-");
   switch (mode) {
     case "HEX":
-      return BigInt("0x" + display.innerText);
+      return !isNegative
+        ? BigInt("0x" + display.innerText.replace(/\s|,/g, ""))
+        : BigInt("0x" + display.innerText.replace(/\s|,|-/g, "")) * BigInt(-1);
     case "DEC":
-      return BigInt(display.innerText);
+      return !isNegative
+        ? BigInt(display.innerText.replace(/\s|,/g, ""))
+        : BigInt(display.innerText.replace(/\s|,|-/g, "")) * BigInt(-1);
     case "OCT":
-      return BigInt("0o" + display.innerText);
+      return !isNegative
+        ? BigInt("0o" + display.innerText.replace(/\s|,/g, ""))
+        : BigInt("0o" + display.innerText.replace(/\s|,|-/g, "")) * BigInt(-1);
     case "BIN":
-      return BigInt("0b" + display.innerText);
+      return !isNegative
+        ? BigInt("0b" + display.innerText.replace(/\s|,/g, ""))
+        : BigInt("0b" + display.innerText.replace(/\s|,|-/g, "")) * BigInt(-1);
+    default:
+      alert("Error");
   }
 }
 
 function handleModeNumber() {
   let displayValue = getDisplayValue();
-  console.log(displayValue);
   modeNumbers.forEach(num => {
     if (num.classList.contains("displayHex")) {
       num.innerText =
@@ -152,10 +217,104 @@ function handleModeNumber() {
   });
 }
 
+function changeFormat(num) {
+  switch (mode) {
+    case "HEX":
+      return num.toString(16).toUpperCase();
+    case "DEC":
+      return num.toString(10);
+    case "OCT":
+      return num.toString(8);
+    case "BIN":
+      return num.toString(2);
+    default:
+      alert("Error");
+  }
+}
+
+function setResult() {
+  let op = operator === Operators.Equal ? lastOperator : operator;
+  if (op === Operators.Addition) {
+    result = result + lastNum;
+  } else if (op === Operators.Substraction) {
+    result = result - lastNum;
+  } else if (op === Operators.Multiplication) {
+    result = result * lastNum;
+  } else if (op === Operators.Division) {
+    try {
+      result = result / lastNum;
+    } catch (err) {
+      alert("Can not divide by 0");
+    }
+  } else if (op === Operators.Modulus) {
+    result = result % lastNum;
+  } else if (op === Operators.LeftShift) {
+    result = result << lastNum;
+  } else if (op === Operators.RightShift) {
+    result = result >> lastNum;
+  }
+}
+
+function isLimit() {
+  if (
+    getDisplayValue() > BigInt("0xFFFFFFFFFFFFFFFF") ||
+    display.innerText.length > 32
+  ) {
+    alert("Reached limit. Clearing...");
+    handleClear();
+    return true;
+  } else {
+    return false;
+  }
+}
+
+function handleOperation(e) {
+  if (isNewNum && result !== 0 && lastNum !== 0) {
+    if (
+      (e.target.innerText === "+" && operator === Operators.Addition) ||
+      (e.target.innerText === "-" && operator === Operators.Substraction) ||
+      (e.target.innerText === "*" && operator === Operators.Multiplication) ||
+      (e.target.innerText === "/" && operator === Operators.Division) ||
+      (e.target.innerText === ">>" && operator === Operators.Modulus) ||
+      (e.target.innerText === "%" && operator === Operators.LeftShift) ||
+      (e.target.innerText === "<<" && operator === Operators.RightShift) ||
+      (e.target.innerText === "=" && operator === Operators.Equal)
+    ) {
+      setResult();
+      if (!isLimit()) {
+        display.innerText = changeFormat(result);
+        handleModeNumber();
+        isNewNum = true;
+      }
+    }
+  }
+
+  if (!isNewNum && !isLimit()) {
+    lastNum = getDisplayValue();
+    setResult();
+    if (!isLimit()) {
+      display.innerText = changeFormat(result);
+      handleModeNumber();
+      isNewNum = true;
+    }
+  }
+
+  if (e.target.innerText === "+") operator = Operators.Addition;
+  if (e.target.innerText === "-") operator = Operators.Substraction;
+  if (e.target.innerText === "*") operator = Operators.Multiplication;
+  if (e.target.innerText === "/") operator = Operators.Division;
+  if (e.target.innerText === "%") operator = Operators.Modulus;
+  if (e.target.innerText === "<<") operator = Operators.LeftShift;
+  if (e.target.innerText === ">>") operator = Operators.RightShift;
+  if (e.target.innerText === "=") operator = Operators.Equal;
+  if (e.target.innerText !== "=") lastOperator = operator;
+}
+
 function init() {
   btnClear.addEventListener("click", handleClear);
-  modeButtons.forEach(btn => btn.addEventListener("click", handleModeChange));
+  btnModes.forEach(btn => btn.addEventListener("click", handleModeChange));
   btnNumbers.forEach(btn => btn.addEventListener("click", handleInput));
+  btnOperators.forEach(btn => btn.addEventListener("click", handleOperation));
 }
 
 init();
